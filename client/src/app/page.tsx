@@ -1,5 +1,11 @@
-import Image from "next/image";
 import { currentUser } from "@clerk/nextjs/server";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import Sidebar from "@/components/Sidebar";
+import ChatPage from "@/components/chat-page";
 
 export default async function Home() {
   const user = await currentUser();
@@ -7,8 +13,16 @@ export default async function Home() {
   if (!user) return <div>Not signed in</div>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      {JSON.stringify(user, null, 2)}
+    <main className="h-[calc(100vh-80px)]">
+      <ResizablePanelGroup className="h-full" direction="horizontal">
+        <ResizablePanel defaultSize={0.2}>
+          <Sidebar />
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel className="h-full" defaultSize={0.8}>
+          <ChatPage username={user!.username!} />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </main>
   );
 }
