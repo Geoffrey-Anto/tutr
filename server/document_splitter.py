@@ -1,5 +1,6 @@
 from typing import Any
 import pdfplumber
+import time
 
 
 def get_document(file: Any) -> list[str]:
@@ -39,18 +40,40 @@ def split_to_chunks(document: list[dict[str, str]], splitter: Any):
 
 
 # from langchain_text_splitters import RecursiveCharacterTextSplitter
+# from db import DB
+# from langchain_community.embeddings import OllamaEmbeddings
 
 # def main():
+#     t = time.time()
 #     document = get_document("./files/dsa-book.pdf")
+    
+#     print(f"Time taken to extract text from PDF: {time.time() - t} seconds")
+    
+#     timeToSplit = time.time()
 
 #     text_splitter = RecursiveCharacterTextSplitter(
 #         chunk_size=1500, chunk_overlap=150)
+    
+#     print(f"Time taken to split text: {time.time() - timeToSplit} seconds")
+    
+#     timeToSplit = time.time()
 
 #     ids, chunks = split_to_chunks(document, splitter=text_splitter)
-
-#     print(ids[45])
-#     print(chunks[45])
-
+    
+#     print(f"Time taken to split text: {time.time() - timeToSplit} seconds")
+#     timeToSplit = time.time()
+    
+#     db = DB(embeddings=OllamaEmbeddings(model="all-minilm"), connection_args={
+#         "uri": "./temp/milvus.db",
+#     })
+    
+#     db.build_vector_store(
+#         chunks, ids, collection_name="geo"
+#     )
+    
+#     print(f"Time taken to build vector store: {time.time() - timeToSplit} seconds")
+    
+#     print(f"Total time taken: {time.time() - t} seconds")
 
 # if __name__ == '__main__':
 #     main()
