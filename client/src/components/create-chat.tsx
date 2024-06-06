@@ -6,23 +6,65 @@ import { Label } from "@/components/ui/label";
 import { AppContext } from "@/contexts/app-context";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
+import { toast } from "./ui/use-toast";
 
 const CreateChat = () => {
   const [upload, setUpload] = React.useState<File | null>(null);
   const { setCurrentChatContext, setChatContextHistory, chatContextHistory } =
     useContext(AppContext);
 
-  const createChat = () => {
+  const createChat = async () => {
     if (upload) {
-      const chatId = uuidv4();
+      const t = toast({
+        title: "Uploading File...",
+        variant: "default",
+        duration: 1000000,
+      });
 
-      // TODO: Upload the file to server
-      const formData = new FormData();
-      formData.append("file", upload);
+      try {
+        let chatId = uuidv4();
+        chatId = chatId.replace(/-/g, "");
+        chatId = "chat_" + chatId;
+        chatId = chatId.substring(0, 25);
+        chatId += upload.name
+          .replace(/ /g, "_")
+          .replace(" ", "_")
+          .replace("-", "_");
 
-      setCurrentChatContext(chatId);
+        const formData = new FormData();
+        formData.append("file", upload);
 
-      setChatContextHistory([...chatContextHistory, chatId]);
+        const requestOptions = {
+          method: "POST",
+          body: formData,
+        };
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_SERVER_URL}/add_document/${chatId}`,
+          requestOptions
+        );
+
+        const _ = await res.text();
+
+        setCurrentChatContext(chatId);
+
+        setChatContextHistory([...chatContextHistory, chatId]);
+
+        toast({
+          title: "Chat Created Successfully!",
+          variant: "default",
+          duration: 5000,
+        });
+      } catch (e) {
+        console.error(e);
+        toast({
+          title: "Failed To Upload File!",
+          variant: "destructive",
+          duration: 5000,
+        });
+      } finally {
+        t.dismiss();
+      }
     }
   };
 

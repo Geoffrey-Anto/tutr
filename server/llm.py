@@ -6,5 +6,6 @@ class LLM():
         self.model = Ollama(model=model_name)
 
     def invoke(self, prompt):
-        for chunks in self.model.stream(prompt):
-            yield chunks
+        response = self.model.invoke(prompt)
+        
+        return response

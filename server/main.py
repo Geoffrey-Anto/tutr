@@ -6,8 +6,11 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import os
 from prompts import PROMPTS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 db = DB(embeddings=OllamaEmbeddings(model="all-minilm"),
         connection_args={"uri": "./temp/milvus.db"})
@@ -16,6 +19,7 @@ llm = LLM("tinyllama")
 
 
 @app.route('/add_document/<user_token>', methods=["post"])
+@cross_origin()
 def add_document(user_token):
     print(request.files.keys())
     f = request.files['file']
@@ -31,10 +35,11 @@ def add_document(user_token):
 
     os.remove(f"./files/{f.filename}")
 
-    return "File Uploaded Successfully"
+    return Response("Document added successfully", status=200)
 
 
 @app.route('/prompt/<user_token>', methods=["POST"])
+@cross_origin()
 def prompt_route(user_token):
     json_data = request.get_json()
 
@@ -51,15 +56,16 @@ def prompt_route(user_token):
 
     prompt = PROMPTS[json_data["type"]](prompt, res)
 
-    print(prompt)
-
-    return app.response_class(stream_with_context(llm.invoke(prompt=prompt)), mimetype='text/plain')
+    response = llm.invoke(prompt)
+    
+    return Response(response, status=200)
 
 
 @app.route('/')
+@cross_origin()
 def hello_world():
     return 'Hello World!!!'
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0")

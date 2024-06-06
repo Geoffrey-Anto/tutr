@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useEffect } from "react";
 
-interface ChatMessage {
+export interface ChatMessage {
   message: string;
   sender: boolean;
   timestamp: string;
@@ -16,6 +16,9 @@ export const AppContext = createContext({
   resetChatStatus: () => {},
   chatContextHistory: Array<string>(),
   setChatContextHistory: (a: string[]) => {},
+  setPromptType: (a: string) => {},
+  promptType: "",
+  resetChatHistory: () => {},
 });
 
 export function AppContextProvider({
@@ -28,12 +31,18 @@ export function AppContextProvider({
   const [chatContextHistory, setChatContextHistory] = React.useState<string[]>(
     []
   );
+  const [promptType, setPromptType] = React.useState("");
 
   const resetChatStatus = useCallback(() => {
     setChatState([]);
     setCurrentChatContext("");
     localStorage.removeItem("currentChatContext");
     localStorage.removeItem("chatState");
+  }, []);
+
+  const resetChatHistory = useCallback(() => {
+    setChatContextHistory([]);
+    localStorage.removeItem("chatContextHistory");
   }, []);
 
   useEffect(() => {
@@ -78,6 +87,9 @@ export function AppContextProvider({
         resetChatStatus,
         chatContextHistory,
         setChatContextHistory,
+        setPromptType,
+        promptType,
+        resetChatHistory,
       }}
     >
       {children}
