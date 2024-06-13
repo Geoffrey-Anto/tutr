@@ -1,9 +1,15 @@
 "use client";
 
 import { AppContext, ChatMessage } from "@/contexts/app-context";
-import { Bot, UserRound } from "lucide-react";
-import React, { useContext } from "react";
+import { Bot, Mic, UserRound } from "lucide-react";
+import React, { useContext, useRef } from "react";
 import Markdown from "react-markdown";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const AIChat = ({ chat }: { chat: ChatMessage }) => {
   return (
@@ -14,6 +20,25 @@ const AIChat = ({ chat }: { chat: ChatMessage }) => {
         <Markdown className="text-[16px] max-w-lg overflow-x-scroll">
           {chat.message}
         </Markdown>
+        <div className="w-full flex items-center justify-end p-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Mic
+                  onClick={() => {
+                    let message = new SpeechSynthesisUtterance(
+                      chat.message.substring(0, 10)
+                    );
+                    speechSynthesis.speak(message);
+                  }}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Speak Out</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </div>
     </div>
   );

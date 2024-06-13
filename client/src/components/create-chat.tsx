@@ -29,7 +29,8 @@ const CreateChat = () => {
         chatId += upload.name
           .replace(/ /g, "_")
           .replace(" ", "_")
-          .replace("-", "_");
+          .replace("-", "_")
+          .replace(".", "_");
 
         const formData = new FormData();
         formData.append("file", upload);

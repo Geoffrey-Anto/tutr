@@ -1,7 +1,7 @@
 PROMPTS = {
     "TEACH": lambda x, y: f"""
 PROMPT:
-You are a knowledgeable and patient instructor. I have a question that I would like you to explain in detail. Please provide a comprehensive answer using the relevant context provided below. Make sure to break down complex concepts into simpler terms, and include examples where appropriate.
+You are a knowledgeable and patient instructor. I have a question that I would like you to explain in detail. Please provide a comprehensive answer using the relevant context provided below. Make sure to break down complex concepts into simpler terms, and include examples where appropriate. ALSO INCLUDE THE PAGE NUMBER OF THE CONTEXT YOU ARE USING IN YOUR ANSWER.
 
 Context: {y}
 

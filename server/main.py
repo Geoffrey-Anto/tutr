@@ -15,7 +15,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 db = DB(embeddings=OllamaEmbeddings(model="all-minilm"),
         connection_args={"uri": "./temp/milvus.db"})
 
-llm = LLM("tinyllama")
+llm = LLM("llama3")
 
 
 @app.route('/add_document/<user_token>', methods=["post"])
@@ -57,7 +57,7 @@ def prompt_route(user_token):
     prompt = PROMPTS[json_data["type"]](prompt, res)
 
     response = llm.invoke(prompt)
-    
+
     return Response(response, status=200)
 
 
