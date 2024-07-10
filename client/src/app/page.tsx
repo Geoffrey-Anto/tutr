@@ -6,11 +6,12 @@ import {
 } from "@/components/ui/resizable";
 import Sidebar from "@/components/Sidebar";
 import ChatPage from "@/components/chat-page";
+import { Landing } from '../components/landing';
 
 export default async function Home() {
   const user = await currentUser();
 
-  if (!user) return <div>Not signed in</div>;
+  if (!user) return <Landing /> ;
 
   return (
     <main className="h-[calc(100vh-80px)]">
